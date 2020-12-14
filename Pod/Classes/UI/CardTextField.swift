@@ -572,19 +572,6 @@ open class CardTextField: UIView, NumberInputTextFieldDelegate {
         }
     }
     
-    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Detect touches in card number text field as long as the detail view is on top of it
-        touches.forEach({ touch -> () in
-            let point = touch.location(in: numberInputTextField)
-            if (numberInputTextField?.point(inside: point, with: event) ?? false) && [monthTextField,yearTextField,cvcTextField, slashLabel].reduce(true, { (currentValue: Bool, view: UIView?) -> Bool in
-                let pointInView = touch.location(in: view)
-                return currentValue && !(view?.point(inside: pointInView, with: event) ?? false)
-            }) {
-                numberInputTextField?.becomeFirstResponder()
-            }
-        })
-    }
-
     open override func becomeFirstResponder() -> Bool {
         // Return false if any of this text field's subviews is already first responder.
         // Otherwise let `numberInputTextField` become the first responder.

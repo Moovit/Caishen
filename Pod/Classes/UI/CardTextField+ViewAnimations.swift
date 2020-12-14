@@ -79,12 +79,18 @@ extension CardTextField {
             } else {
                 if shouldMoveAnimated {
                     numberInputTextField?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
-                    cardInfoView?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
                 } else {
                     UIView.performWithoutAnimation { [weak self] in
                         self?.numberInputTextField?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
-                        self?.cardInfoView?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
                     }
+                }
+            }
+            let offset = isRightToLeftLanguage ? rect.origin.x : -rect.origin.x
+            if shouldMoveAnimated {
+                cardInfoView?.transform = CGAffineTransform(translationX: offset, y: 0)
+            } else {
+                UIView.performWithoutAnimation { [weak self] in
+                    self?.cardInfoView?.transform = CGAffineTransform(translationX: offset, y: 0)
                 }
             }
         } else {
