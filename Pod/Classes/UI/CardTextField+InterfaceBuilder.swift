@@ -7,39 +7,45 @@
 //
 
 extension CardTextField {
-    override public final var textColor: UIColor? {
-        didSet {
+    public final var textColor: UIColor? {
+        get {
+            numberInputTextField.textColor
+        }
+        set {
             let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
-            textFieldArray.forEach({$0?.textColor = textColor})
+            textFieldArray.forEach({$0?.textColor = newValue})
         }
     }
-    override public final var backgroundColor: UIColor? {
-        didSet {
-            numberInputTextField?.backgroundColor = backgroundColor
+//    public final var backgroundColor: UIColor? {
+//        didSet {
+//            numberInputTextField?.backgroundColor = backgroundColor
+//        }
+//    }
+    public final var font: UIFont? {
+        get {
+            numberInputTextField.font
         }
-    }
-    override public final var font: UIFont? {
-        didSet {
+        set {
             let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
-            textFieldArray.forEach({$0?.font = font})
+            textFieldArray.forEach({$0?.font = newValue})
         }
     }
-    override public final var keyboardType: UIKeyboardType {
-        didSet {
-            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
-            textFieldArray.forEach({$0?.keyboardType = keyboardType})
-        }
-    }
-    override public final var isSecureTextEntry: Bool {
-        didSet {
-            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
-            textFieldArray.forEach({$0?.isSecureTextEntry = isSecureTextEntry})
-        }
-    }
-    override public final var keyboardAppearance: UIKeyboardAppearance {
-        didSet {
-            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
-            textFieldArray.forEach({$0?.keyboardAppearance = keyboardAppearance})
-        }
-    }
+//    public final var keyboardType: UIKeyboardType {
+//        didSet {
+//            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
+//            textFieldArray.forEach({$0?.keyboardType = keyboardType})
+//        }
+//    }
+//    public final var isSecureTextEntry: Bool {
+//        didSet {
+//            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
+//            textFieldArray.forEach({$0?.isSecureTextEntry = isSecureTextEntry})
+//        }
+//    }
+//    public final var keyboardAppearance: UIKeyboardAppearance {
+//        didSet {
+//            let textFieldArray: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
+//            textFieldArray.forEach({$0?.keyboardAppearance = keyboardAppearance})
+//        }
+//    }
 }

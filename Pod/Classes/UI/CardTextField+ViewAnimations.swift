@@ -55,7 +55,7 @@ extension CardTextField {
         // which in turn will cause the number field to move to full display. This can cause animation issues.
         // In order to tackle these animation issues, check if the cardInfoView was previously fully displayed (and should therefor not be moved with an animation).
         var shouldMoveAnimated: Bool = true
-        if let transform = cardInfoView?.transform, transform.isIdentity {
+        if let transform = cardInfoView?.transform, !transform.isIdentity {
             shouldMoveAnimated = false
         }
         if UIAccessibility.isVoiceOverRunning {
@@ -78,12 +78,12 @@ extension CardTextField {
                 numberInputTextField?.transform = CGAffineTransform.identity
             } else {
                 if shouldMoveAnimated {
-                    numberInputTextField?.transform =
-                        CGAffineTransform(translationX: -rect.origin.x, y: 0)
+                    numberInputTextField?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
+                    cardInfoView?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
                 } else {
                     UIView.performWithoutAnimation { [weak self] in
-                        self?.numberInputTextField?.transform =
-                            CGAffineTransform(translationX: -rect.origin.x, y: 0)
+                        self?.numberInputTextField?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
+                        self?.cardInfoView?.transform = CGAffineTransform(translationX: -rect.origin.x, y: 0)
                     }
                 }
             }
@@ -96,13 +96,7 @@ extension CardTextField {
                 self?.numberInputTextField?.resignFirstResponder()
             }
         }
-        if shouldMoveAnimated {
-            cardInfoView?.transform = CGAffineTransform.identity
-        } else {
-            UIView.performWithoutAnimation { [weak self] in
-                self?.cardInfoView?.transform = CGAffineTransform.identity
-            }
-        }
+
         if remainFirstResponder {
             monthTextField.becomeFirstResponderIfNotVoiceOver()
         }
@@ -160,7 +154,6 @@ extension CardTextField {
         }
         
         // Move card info view
-        let offset = isRightToLeftLanguage ? -bounds.width : bounds.width
-        cardInfoView?.transform = CGAffineTransform(translationX: offset, y: 0)
+        cardInfoView?.transform = .identity
     }
 }

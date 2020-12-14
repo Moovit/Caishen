@@ -22,7 +22,7 @@ import UIKit
  
  In order to create a custom CardTextField, you can create a subclass which overrides `getNibName()` and `getNibBundle()` in order to load a nib from a specific bundle, which follows this structure
  */
-open class CardTextField: UITextField, NumberInputTextFieldDelegate {
+open class CardTextField: UIView, NumberInputTextFieldDelegate {
     
     // MARK: - Public variables
     
@@ -180,18 +180,16 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     }
 
     #if !TARGET_INTERFACE_BUILDER
-    open override var placeholder: String? {
+    open var placeholder: String? {
         didSet {
             numberInputTextField?.placeholder = placeholder
-            super.placeholder = nil
         }
     }
     #endif
 
-    open override var attributedPlaceholder: NSAttributedString? {
+    open var attributedPlaceholder: NSAttributedString? {
         didSet {
             numberInputTextField?.attributedPlaceholder = attributedPlaceholder
-            super.attributedPlaceholder = nil
         }
     }
 
@@ -305,17 +303,17 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         
         // Reset gesture recognizers
         [firstObjectInNib, cardInfoView].forEach({$0?.gestureRecognizers = []})
-        
+
         let hideCardNumberSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeHideCardNumber))
         hideCardNumberSwipeRecognizer.direction = isRightToLeftLanguage ? .right : .left
         firstObjectInNib.addGestureRecognizer(hideCardNumberSwipeRecognizer)
-        
+
         [firstObjectInNib, cardInfoView].forEach({
             let showCardNumberSwipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(moveCardNumberInAnimated))
             showCardNumberSwipeRecognizer.direction = isRightToLeftLanguage ? .left : .right
             $0?.addGestureRecognizer(showCardNumberSwipeRecognizer)
         })
-        
+
         setupTextFieldDelegates()
         setupTextFieldAttributes()
         setupTargetsForEditingBegin()
@@ -383,14 +381,11 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         let textFields: [UITextField?] = [numberInputTextField, cvcTextField, monthTextField, yearTextField]
         textFields.forEach({
             $0?.keyboardType = .numberPad
-            $0?.textColor = textColor
-            $0?.font = font
-            $0?.keyboardAppearance = keyboardAppearance
-            $0?.isSecureTextEntry = isSecureTextEntry
+//            $0?.textColor = textColor
+//            $0?.font = font
+//            $0?.keyboardAppearance = keyboardAppearance
+//            $0?.isSecureTextEntry = isSecureTextEntry
         })
-        
-        super.textColor = UIColor.clear
-        super.placeholder = nil
     }
     
     /**
@@ -418,7 +413,7 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         isAccessibilityElement = false
         accessibilityElements = [ numberInputTextField, monthTextField, yearTextField, cvcTextField, accessoryButton ]
         mainStack?.axis = UIAccessibility.isVoiceOverRunning ? .vertical : .horizontal
-        cardInfoLeadingConstraint?.isActive = UIAccessibility.isVoiceOverRunning
+//        cardInfoLeadingConstraint?.isActive = UIAccessibility.isVoiceOverRunning
     }
     
     /**
@@ -608,38 +603,4 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
             .first?
             .resignFirstResponder() ?? true
     }
-    /**
-        There are 5 elements that enables accessibility in a CardTextField.
-        They are numberInputTextField, monthTextField, yearTextField, cvcTextField and accessoryButton.
-        They should be focused when user click on one of them when accessibility is on.
-
-        - returns: total number accessibility elements in the container CardTextField
-        */
-       open override func accessibilityElementCount() -> Int {
-           return 5
-       }
-
-       /**
-        Returns the accessibility element at the specified index
-
-        - parameter index: The index of the accessibility element
-
-        - returns: The accessibility element at the specified index, or nil if none exists
-        */
-       open override func accessibilityElement(at index: Int) -> Any? {
-           switch index {
-           case 0:
-               return numberInputTextField
-           case 1:
-               return monthTextField
-           case 2:
-               return yearTextField
-           case 3:
-               return cvcTextField
-           case 4:
-               return accessoryButton
-           default:
-               return nil
-           }
-       }
 }
