@@ -37,30 +37,46 @@ open class NumberInputTextField: StylizedTextField {
     
     open override var accessibilityValue: String? {
         get {
-            // In order to read digits of the card number one by one, return them as "4 1 1 ..." separated by single spaces and commas inbetween groups for pauses
-            var singleDigits: [Character] = []
-            var lastCharWasReplacedWithComma = false
-            text?.forEach({
-                if !$0.isNumeric() {
-                    if !lastCharWasReplacedWithComma {
-                        singleDigits.append(",")
-                        lastCharWasReplacedWithComma = true
-                    } else {
-                        lastCharWasReplacedWithComma = false
-                    }
-                }
-                singleDigits.append($0)
-                singleDigits.append(" ")
-            })
-            return String(singleDigits)
-                + ". "
-                + Localization.CardType.localizedStringWithComment("Description for detected card type.")
-                + ": "
-                + cardTypeRegister.cardType(for: cardNumber).name
+            cardNumberAccessibilityValue
         }
         
         set {  }
     }
+
+    private var cardNumberAccessibilityValue: String? {
+        guard let text = text else { return nil }
+        // In order to read digits of the card number one by one, return them as "4 1 1 ..." separated by single spaces and commas inbetween groups for pauses
+        var singleDigits: [Character] = []
+        var lastCharWasReplacedWithComma = false
+        text.forEach {
+            if !$0.isNumeric() {
+                if !lastCharWasReplacedWithComma {
+//                    singleDigits.append(",")
+                    lastCharWasReplacedWithComma = true
+                } else {
+                    lastCharWasReplacedWithComma = false
+                }
+            } else {
+                singleDigits.append($0)
+            }
+//            singleDigits.append(" ")
+        }
+
+        return singleDigits.map { String($0) }.joined(separator: " ")
+    }
+
+    private var cardTypeAccessibilityValue: String? {
+        guard let text = text else { return nil }
+        let cardType = cardTypeRegister.cardType(for: cardNumber)
+        guard !(cardType is UnknownCardType) else {
+            return nil
+        }
+        return Localization.CardType.localizedStringWithComment("Description for detected card type.")
+            + ": "
+            + cardTypeRegister.cardType(for: cardNumber).name
+    }
+
+
     
     /// Variable to store the text color of this text field. The actual property `textColor` (as inherited from UITextField) will change based on whether or not the entered card number was invalid and may be `invalidInputColor` in this case. In order to always set and retreive the actual text color for this text field, it is saved and retreived to and from this private property.
     private var _textColor: UIColor?
